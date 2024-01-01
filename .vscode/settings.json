@@ -1,0 +1,34 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.stylelint": "always",
+		"source.fixAll.eslint": "always"
+	},
+	"search.exclude": {
+		"**/node_modules": true
+	},
+	"files.exclude": {
+		"**/*.scss.d.ts": true,
+		"tsconfig.tsbuildinfo": true
+	},
+	"files.associations": {
+		"commit-msg": "shellscript"
+	},
+	"material-icon-theme.files.associations": {
+		"*.routes.ts": "routing",
+		"*.strategy.ts": "nest-gateway"
+	},
+	"material-icon-theme.folders.associations": {
+		".volumes": "database",
+		"decorators": "meta",
+		"interceptors": "connection",
+		"strategies": "mappings",
+		"queries": "shader",
+		"secrets": "keys",
+		"user": "client",
+		"_templates": "template"
+	},
+	"material-icon-theme.activeIconPack": "nest",
+	"task.allowAutomaticTasks": "on",
+}
