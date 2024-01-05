@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, View, Modal, StyleSheet, Text, Pressable, Alert } from 'react-native';
-import * as Progress from 'react-native-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
+import React, { useState } from 'react';
+import { KeyboardAvoidingView, View, Modal, StyleSheet, Alert } from 'react-native';
+import * as Progress from 'react-native-progress';
 
 import FirstFormScreen from './FirstFormScreen/FirstFormScreen';
 import SecondFormScreen from './SecondFormScreen/SecondFormScreen';
@@ -56,7 +56,6 @@ function AddEventModal(props: Props) {
 				props.onAddNewEvent(eventData);
 			} else {
 				Alert.alert('Invalid event data', 'Please check the event details');
-				return;
 			}
 		} catch (error) {
 			if (error instanceof Error) Alert.alert('Unable to add event', error.message);
@@ -73,13 +72,13 @@ function AddEventModal(props: Props) {
 			transparent
 			visible={props.isToggledModal}
 			onRequestClose={() => {
-				props.onPressToggleModal;
+				props.onPressToggleModal();
 			}}
 		>
-			<KeyboardAvoidingView behavior={'padding'} style={styles.centeredView}>
+			<KeyboardAvoidingView behavior="padding" style={styles.centeredView}>
 				<View style={styles.modalView}>
 					<View style={styles.progressBar}>
-						<Progress.Bar color={'#BDCDE3'} progress={(progressPart / 10) * 3.333} width={270} />
+						<Progress.Bar color="#BDCDE3" progress={(progressPart / 10) * 3.333} width={270} />
 					</View>
 
 					{progressPart === 1 && (

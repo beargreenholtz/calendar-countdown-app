@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, Pressable, StyleSheet, Text, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import React from 'react';
+import { View, Pressable, StyleSheet, Text } from 'react-native';
 
 type Props = {
 	readonly onPressToggleModal: () => void;

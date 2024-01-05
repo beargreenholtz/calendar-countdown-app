@@ -1,19 +1,19 @@
+import { FontAwesome, Fontisto } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { type RouteProp, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, Alert } from 'react-native';
-import { FontAwesome, Fontisto } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
-import { type Event } from '../../types/event';
-import { type RouteParams } from '../../types/routes';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import ProgressElement from '../ui/ProgressElement';
+import { type EventData } from '../../types/event';
+import { type RouteParams } from '../../types/routes';
 import { dateFormat } from '../../utils/date-format';
+import ProgressElement from '../ui/ProgressElement';
 
 function Event() {
 	const route = useRoute<RouteProp<{ params: RouteParams }>>();
 
-	const [event, setEvent] = useState<Event>();
+	const [event, setEvent] = useState<EventData>();
 
 	const { eventId } = route.params;
 
@@ -29,7 +29,7 @@ function Event() {
 				const parsedEvent = JSON.parse(value);
 
 				setEvent(parsedEvent);
-			} catch (e) {
+			} catch {
 				Alert.alert('Cant find event');
 			}
 		};

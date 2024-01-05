@@ -1,12 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Home from './screens/Home';
-import Event from './components/Event/Event';
-import { createStackNavigator } from '@react-navigation/stack';
-import 'react-native-gesture-handler';
-
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View } from 'react-native';
+
+import Event from './components/Event/Event';
+import Home from './screens/Home';
+import 'react-native-gesture-handler';
 
 export default function App() {
 	const Stack = createStackNavigator();

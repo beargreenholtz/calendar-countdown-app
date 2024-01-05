@@ -1,11 +1,11 @@
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react';
 import { View, StyleSheet, Text, Pressable } from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 
-import { type Event } from '../../../types/event';
+import { type EventData } from '../../../types/event';
 
 type Props = {
-	readonly data: Event;
+	readonly data: EventData;
 	readonly isVisible: boolean;
 	readonly toggleDateVisibility: () => void;
 	readonly onPressSubmitEvent: () => void;
@@ -22,10 +22,10 @@ function ThirdFormScreen(props: Props) {
 			{props.isVisible && (
 				<RNDateTimePicker
 					minimumDate={new Date()}
-					themeVariant={'light'}
+					themeVariant="light"
 					value={props.data.date}
-					accentColor={'#7EA39F'}
-					onChange={(e, date) => (date ? props.onChangeInput('date', date) : new Date())}
+					accentColor="#7EA39F"
+					onChange={(_, date) => (date ? props.onChangeInput('date', date) : new Date())}
 				/>
 			)}
 			<Text>Pick the event date.</Text>

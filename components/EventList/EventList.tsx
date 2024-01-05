@@ -1,14 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Haptics from 'expo-haptics';
-import { type Event } from '../../types/event';
 
+import { type EventData } from '../../types/event';
+import { dateFormat } from '../../utils/date-format';
+import AddEventButton from '../AddEventButton/AddEventButton';
 import AddEventModal from '../AddEventModal/AddEventModal';
 import ProgressElement from '../ui/ProgressElement';
-import AddEventButton from '../AddEventButton/AddEventButton';
-import { dateFormat } from '../../utils/date-format';
 
 function EventList() {
 	const navigation = useNavigation();
@@ -19,13 +19,13 @@ function EventList() {
 		setIsToggledModal((prev) => !prev);
 	};
 
-	const [events, setEvents] = useState<Event[]>([]);
+	const [events, setEvents] = useState<EventData[]>([]);
 
 	const onPressEvent = (id: string) => {
 		navigation.navigate('Event', { eventId: id });
 	};
 
-	const onAddNewEvent = (event: Event) => {
+	const onAddNewEvent = (event: EventData) => {
 		if (event) {
 			setEvents((prev) => [...prev, event]);
 		}
@@ -56,7 +56,7 @@ function EventList() {
 					try {
 						const eventJSON = await AsyncStorage.getItem(key);
 						return eventJSON ? JSON.parse(eventJSON) : null;
-					} catch (error) {
+					} catch {
 						return null;
 					}
 				});

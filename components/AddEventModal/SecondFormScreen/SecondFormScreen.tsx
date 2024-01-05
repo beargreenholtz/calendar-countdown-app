@@ -15,7 +15,7 @@ function SecondFormScreen(props: Props) {
 			<TextInput
 				placeholder="Description"
 				value={props.data.description}
-				placeholderTextColor={'#BDCDE3'}
+				placeholderTextColor="#BDCDE3"
 				onChangeText={(e) => props.onChangeInput('description', e)}
 				style={styles.inputDescription}
 				numberOfLines={4}

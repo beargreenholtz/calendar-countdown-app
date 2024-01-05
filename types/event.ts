@@ -1,4 +1,4 @@
-export type Event = {
+export type EventData = {
 	readonly id: string;
 	readonly name: string;
 	readonly description: string;

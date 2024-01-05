@@ -5,6 +5,7 @@
 	"scripts": {
 		"start": "expo start",
 		"ts:check": "tsc",
+		"lint": "eslint . --fix",
 		"android": "expo start --android",
 		"ios": "expo start --ios",
 		"web": "expo start --web"
@@ -40,6 +41,8 @@
 		"@types/jest": "^29.5.11",
 		"@types/react": "^18.2.46",
 		"@types/react-test-renderer": "^18.0.7",
+		"eslint": "^8.56.0",
+		"eslint-config-universe": "^12.0.0",
 		"expo-updates": "~0.18.19",
 		"prettier": "^3.1.1",
 		"prettier-plugin-sh": "^0.13.1",

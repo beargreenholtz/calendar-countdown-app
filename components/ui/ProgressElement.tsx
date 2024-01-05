@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import CircularProgress from 'react-native-circular-progress-indicator';
 import * as Animatable from 'react-native-animatable';
+import CircularProgress from 'react-native-circular-progress-indicator';
 
 import { calculateDaysPassed, calculateDaysPassedToTarget } from '../../utils/days-caculator';
 
@@ -20,11 +19,11 @@ function ProgressElement(props: Props) {
 				value={timeReached ? 1 : calculateDaysPassed(props.createdDate)}
 				radius={props.isSmall ? 45 : 80}
 				duration={100}
-				progressValueColor={'black'}
+				progressValueColor="black"
 				maxValue={calculateDaysPassedToTarget(props.createdDate, props.targetDate)}
-				activeStrokeColor={'#F8BD8E'}
-				title={'Days'}
-				titleColor={'black'}
+				activeStrokeColor="#F8BD8E"
+				title="Days"
+				titleColor="black"
 				titleStyle={{ fontWeight: 'bold' }}
 			/>
 		</Animatable.View>

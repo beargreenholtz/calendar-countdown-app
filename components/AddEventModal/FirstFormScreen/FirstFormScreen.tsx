@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, Pressable, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, Pressable, TextInput, ActivityIndicator } from 'react-native';
 
-import { Event } from '../../../types/event';
-
-import { FontAwesome } from '@expo/vector-icons';
+import { type EventData } from '../../../types/event';
 
 type Props = {
-	readonly data: Event;
+	readonly data: EventData;
 	readonly onChangeInput: (name: string, value: string) => void;
 	readonly onPressChangePart: (direction: string) => void;
 	readonly onPressToggleModal: () => void;
@@ -21,12 +20,12 @@ function FirstFormScreen(props: Props) {
 		setIsLoadingLocation(true);
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
-		let { status } = await Location.requestForegroundPermissionsAsync();
+		const { status } = await Location.requestForegroundPermissionsAsync();
 		if (status !== 'granted') {
 			return;
 		}
 
-		let location = await Location.getCurrentPositionAsync({});
+		const location = await Location.getCurrentPositionAsync({});
 		const address = await Location.reverseGeocodeAsync(location.coords);
 
 		props.onChangeInput('location', address[0].name ? address[0].name : '');
@@ -38,7 +37,7 @@ function FirstFormScreen(props: Props) {
 			<TextInput
 				placeholder="Event name"
 				value={props.data.name ? props.data.name : ''}
-				placeholderTextColor={'#BDCDE3'}
+				placeholderTextColor="#BDCDE3"
 				onChangeText={(e) => props.onChangeInput('name', e)}
 				style={styles.inputName}
 			/>
@@ -53,7 +52,7 @@ function FirstFormScreen(props: Props) {
 				<TextInput
 					placeholder="Location"
 					value={props.data.location}
-					placeholderTextColor={'#BDCDE3'}
+					placeholderTextColor="#BDCDE3"
 					onChangeText={(e) => props.onChangeInput('location', e)}
 					style={styles.inputLocation}
 				/>
