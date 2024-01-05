@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { View, Pressable, StyleSheet, Text, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
-function AddEventButton(props) {
+type Props = {
+	readonly onPressToggleModal: () => void;
+};
+
+function AddEventButton(props: Props) {
 	const handlePress = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		props.onPressToggleModal();

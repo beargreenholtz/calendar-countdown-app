@@ -1,23 +1,31 @@
-import { useRoute } from '@react-navigation/native';
+import { type RouteProp, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, Alert } from 'react-native';
 import { FontAwesome, Fontisto } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
+import { type Event } from '../../types/event';
+import { type RouteParams } from '../../types/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ProgressElement from '../ui/ProgressElement';
 import { dateFormat } from '../../utils/date-format';
 
 function Event() {
-	const route = useRoute();
-	const [event, setEvent] = useState();
+	const route = useRoute<RouteProp<{ params: RouteParams }>>();
 
-	const eventId = route.params.eventId;
+	const [event, setEvent] = useState<Event>();
+
+	const { eventId } = route.params;
 
 	useEffect(() => {
 		const getData = async () => {
 			try {
+				if (!eventId) throw 'cant find event';
+
 				const value = await AsyncStorage.getItem(eventId);
+
+				if (typeof value !== 'string') throw 'item fetching problem';
+
 				const parsedEvent = JSON.parse(value);
 
 				setEvent(parsedEvent);
@@ -30,20 +38,17 @@ function Event() {
 	}, []);
 
 	return event ? (
-		<View style={styles.container}>
+		<View>
 			<View style={styles.upperContainer}>
 				<Animatable.Text animation="fadeInUp" style={styles.title}>
 					{event.name}
 				</Animatable.Text>
-				<ProgressElement
-					style={styles.progressCircle}
-					createdDate={dateFormat(event.createdDate)}
-					targetDate={dateFormat(event.date)}
-					isSmall={false}
-				/>
+				<View style={styles.progressCircle}>
+					<ProgressElement createdDate={dateFormat(event.createdDate)} targetDate={dateFormat(event.date)} isSmall={false} />
+				</View>
 			</View>
 			<View style={styles.lowerContainer}>
-				<View style={styles.descriptionContainer}>
+				<View>
 					<Animatable.View animation="fadeInUp" delay={200} style={styles.element}>
 						<FontAwesome name="location-arrow" size={24} color="#BDCDE3" />
 						<Text style={styles.location}>{event.location}</Text>
@@ -53,7 +58,7 @@ function Event() {
 						<Text style={styles.targetDate}>{dateFormat(event.date)}</Text>
 					</Animatable.View>
 					<Animatable.View delay={600} animation="fadeInUp">
-						<Text style={styles.description}>{event.description}</Text>
+						<Text>{event.description}</Text>
 					</Animatable.View>
 				</View>
 			</View>

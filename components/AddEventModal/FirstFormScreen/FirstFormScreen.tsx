@@ -3,9 +3,18 @@ import { View, StyleSheet, Text, Pressable, TextInput, Alert, ActivityIndicator 
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
 
+import { Event } from '../../../types/event';
+
 import { FontAwesome } from '@expo/vector-icons';
 
-function FirstFormScreen(props) {
+type Props = {
+	readonly data: Event;
+	readonly onChangeInput: (name: string, value: string) => void;
+	readonly onPressChangePart: (direction: string) => void;
+	readonly onPressToggleModal: () => void;
+};
+
+function FirstFormScreen(props: Props) {
 	const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
 	const onGetLocation = async () => {
@@ -20,7 +29,7 @@ function FirstFormScreen(props) {
 		let location = await Location.getCurrentPositionAsync({});
 		const address = await Location.reverseGeocodeAsync(location.coords);
 
-		props.onChangeInput('location', address[0].name);
+		props.onChangeInput('location', address[0].name ? address[0].name : '');
 
 		setIsLoadingLocation(false);
 	};
@@ -39,7 +48,7 @@ function FirstFormScreen(props) {
 						<FontAwesome name="location-arrow" size={24} color="#BDCDE3" />
 					</Pressable>
 				) : (
-					<ActivityIndicator style={styles.loader} />
+					<ActivityIndicator />
 				)}
 				<TextInput
 					placeholder="Location"

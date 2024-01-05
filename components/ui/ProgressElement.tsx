@@ -5,11 +5,17 @@ import * as Animatable from 'react-native-animatable';
 
 import { calculateDaysPassed, calculateDaysPassedToTarget } from '../../utils/days-caculator';
 
-function ProgressElement(props) {
-	const timeReached = new Date(props.targetDate) - Date.now() <= 0;
+type Props = {
+	readonly isSmall: boolean;
+	readonly createdDate: string;
+	readonly targetDate: string;
+};
+
+function ProgressElement(props: Props) {
+	const timeReached = new Date(props.targetDate).getTime() - Date.now() <= 0;
 
 	return (
-		<Animatable.View animation="fadeInUp" style={props.style}>
+		<Animatable.View animation="fadeInUp">
 			<CircularProgress
 				value={timeReached ? 1 : calculateDaysPassed(props.createdDate)}
 				radius={props.isSmall ? 45 : 80}

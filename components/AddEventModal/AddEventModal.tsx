@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, View, Modal, StyleSheet, Text, Pressable, Alert } from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import * as Progress from 'react-native-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
@@ -9,8 +8,15 @@ import FirstFormScreen from './FirstFormScreen/FirstFormScreen';
 import SecondFormScreen from './SecondFormScreen/SecondFormScreen';
 import ThirdFormScreen from './ThirdFormScreen/ThirdFormScreen';
 
-function AddEventModal(props) {
+type Props = {
+	readonly onAddNewEvent: any;
+	readonly onPressToggleModal: () => void;
+	readonly isToggledModal: boolean;
+};
+
+function AddEventModal(props: Props) {
 	const [progressPart, setProgressPart] = useState(1);
+	const [isVisible, setIsVisible] = useState(true);
 
 	const [eventData, setEventData] = useState({
 		id: Crypto.randomUUID(),
@@ -21,7 +27,12 @@ function AddEventModal(props) {
 		createdDate: new Date(),
 	});
 
-	const onChangeInput = (inputName, value) => {
+	const toggleDateVisibility = () => {
+		setIsVisible((prev) => !prev);
+	};
+
+	const onChangeInput = (inputName: string, value: string | Date) => {
+		setIsVisible((prev) => !prev);
 		setEventData((prev) => {
 			return {
 				...prev,
@@ -29,7 +40,8 @@ function AddEventModal(props) {
 			};
 		});
 	};
-	const onPressChangePart = (direction) => {
+
+	const onPressChangePart = (direction: string) => {
 		setProgressPart((prev) => {
 			return direction === 'next' ? prev + 1 : prev - 1;
 		});
@@ -37,10 +49,17 @@ function AddEventModal(props) {
 
 	const onPressSubmitEvent = async () => {
 		try {
-			props.onAddNewEvent(eventData);
-			await AsyncStorage.setItem(eventData.id, JSON.stringify(eventData));
+			if (eventData) {
+				const eventDataString = JSON.stringify(eventData);
+				await AsyncStorage.setItem(eventData.id, eventDataString);
+
+				props.onAddNewEvent(eventData);
+			} else {
+				Alert.alert('Invalid event data', 'Please check the event details');
+				return;
+			}
 		} catch (error) {
-			Alert.alert('Unable to add event');
+			if (error instanceof Error) Alert.alert('Unable to add event', error.message);
 		} finally {
 			props.onPressToggleModal();
 			setEventData({ id: Crypto.randomUUID(), name: '', description: '', date: new Date(), location: '', createdDate: new Date() });
@@ -74,10 +93,12 @@ function AddEventModal(props) {
 					{progressPart === 2 && <SecondFormScreen onPressChangePart={onPressChangePart} onChangeInput={onChangeInput} data={eventData} />}
 					{progressPart === 3 && (
 						<ThirdFormScreen
+							toggleDateVisibility={toggleDateVisibility}
 							onPressSubmitEvent={onPressSubmitEvent}
 							onPressChangePart={onPressChangePart}
 							onChangeInput={onChangeInput}
 							data={eventData}
+							isVisible={isVisible}
 						/>
 					)}
 				</View>

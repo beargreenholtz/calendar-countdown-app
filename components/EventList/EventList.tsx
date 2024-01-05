@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated } from 'react-native';
+import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
+import { type Event } from '../../types/event';
 
 import AddEventModal from '../AddEventModal/AddEventModal';
 import ProgressElement from '../ui/ProgressElement';
@@ -18,17 +19,19 @@ function EventList() {
 		setIsToggledModal((prev) => !prev);
 	};
 
-	const [events, setEvents] = useState();
+	const [events, setEvents] = useState<Event[]>([]);
 
-	const onPressEvent = (id) => {
+	const onPressEvent = (id: string) => {
 		navigation.navigate('Event', { eventId: id });
 	};
 
-	const onAddNewEvent = (event) => {
-		setEvents((prev) => [...prev, event]);
+	const onAddNewEvent = (event: Event) => {
+		if (event) {
+			setEvents((prev) => [...prev, event]);
+		}
 	};
 
-	const onLongPressRemoveItem = async (id) => {
+	const onLongPressRemoveItem = async (id: string) => {
 		try {
 			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
 
@@ -36,17 +39,17 @@ function EventList() {
 
 			setEvents((prev) => prev.filter((event) => event.id !== id));
 		} catch (error) {
-			Alert.alert(error);
+			if (error instanceof Error) Alert.alert(error.message);
 		}
 	};
 
 	useEffect(() => {
-		(fetchAllEvents = async () => {
+		(async () => {
 			let keys;
 			try {
 				keys = await AsyncStorage.getAllKeys();
-			} catch (e) {
-				Alert.alert(e);
+			} catch (error) {
+				if (error instanceof Error) Alert.alert(error.message);
 			}
 			if (keys && keys.length > 0) {
 				const eventsPromises = keys.map(async (key) => {
@@ -83,6 +86,8 @@ function EventList() {
 							inputRange: opacityInputRange,
 							outputRange: [1, 1, 1, 0],
 						});
+
+						console.log(dateFormat(event.item.date));
 						return (
 							<Animated.View style={{ transform: [{ scale }], opacity }}>
 								<Pressable onPress={() => onPressEvent(event.item.id)} onLongPress={() => onLongPressRemoveItem(event.item.id)}>
@@ -90,16 +95,15 @@ function EventList() {
 										<View>
 											<Text style={styles.title}>{event.item.name}</Text>
 											<Text style={styles.targetDate}>{dateFormat(event.item.date)}</Text>
-											<Text style={styles.location}>{event.item.location}</Text>
+											<Text>{event.item.location}</Text>
 										</View>
-										<ProgressElement createdDate={event.item.createdDate} targetDate={dateFormat(event.item.date)} isSmall />
+										<ProgressElement createdDate={dateFormat(event.item.createdDate)} targetDate={dateFormat(event.item.date)} isSmall />
 									</View>
 								</Pressable>
 							</Animated.View>
 						);
 					}}
 					keyExtractor={(item) => item.id}
-					alwaysBounceVertical="false"
 				/>
 			</SafeAreaView>
 			<AddEventButton onPressToggleModal={onPressToggleModal} />

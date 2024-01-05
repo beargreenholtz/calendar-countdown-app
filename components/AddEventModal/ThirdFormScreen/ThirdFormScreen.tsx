@@ -2,18 +2,33 @@ import React from 'react';
 import { View, StyleSheet, Text, Pressable } from 'react-native';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 
-function ThirdFormScreen(props) {
+import { type Event } from '../../../types/event';
+
+type Props = {
+	readonly data: Event;
+	readonly isVisible: boolean;
+	readonly toggleDateVisibility: () => void;
+	readonly onPressSubmitEvent: () => void;
+	readonly onChangeInput: (name: string, value: Date) => void;
+	readonly onPressChangePart: (direction: string) => void;
+};
+
+function ThirdFormScreen(props: Props) {
 	return (
 		<>
-			<RNDateTimePicker
-				minimumDate={new Date()}
-				themeVariant={'light'}
-				value={props.data.date}
-				accentColor={'#7EA39F'}
-				onChange={(e, date) => props.onChangeInput('date', date)}
-			/>
-
-			<Text style={styles.modalText}>Pick the event date.</Text>
+			<Pressable style={[styles.button, styles.showDateButton]} onPress={() => props.toggleDateVisibility()}>
+				<Text style={styles.textStyle}>Show Date</Text>
+			</Pressable>
+			{props.isVisible && (
+				<RNDateTimePicker
+					minimumDate={new Date()}
+					themeVariant={'light'}
+					value={props.data.date}
+					accentColor={'#7EA39F'}
+					onChange={(e, date) => (date ? props.onChangeInput('date', date) : new Date())}
+				/>
+			)}
+			<Text>Pick the event date.</Text>
 			<View style={styles.buttons}>
 				<Pressable style={[styles.button, styles.buttonClose]} onPress={() => props.onPressChangePart('prev')}>
 					<Text style={styles.textStyle}>Back</Text>
@@ -45,6 +60,10 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontWeight: 'bold',
 		textAlign: 'center',
+	},
+	showDateButton: {
+		backgroundColor: '#7EA39F',
+		marginBottom: 8,
 	},
 });
 

@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Text, Pressable, TextInput } from 'react-native';
 
-function SecondFormScreen(props) {
+import { type Event } from '../../../types/event';
+
+type Props = {
+	readonly data: Event;
+	readonly onChangeInput: (name: string, value: string) => void;
+	readonly onPressChangePart: (direction: string) => void;
+};
+
+function SecondFormScreen(props: Props) {
 	return (
 		<>
 			<TextInput

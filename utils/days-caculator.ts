@@ -1,4 +1,4 @@
-export const calculateDaysPassed = (createdDate) => {
+export const calculateDaysPassed = (createdDate: string) => {
 	const oneDay = 24 * 60 * 60 * 1000;
 	const createdDateTime = new Date(createdDate).getTime();
 	const currentDateTime = new Date().getTime();
@@ -6,7 +6,7 @@ export const calculateDaysPassed = (createdDate) => {
 	return daysPassed;
 };
 
-export const calculateDaysPassedToTarget = (createdDate, targetDate) => {
+export const calculateDaysPassedToTarget = (createdDate: string, targetDate: string) => {
 	const oneDay = 24 * 60 * 60 * 1000;
 	const createdDateTime = new Date(createdDate).getTime();
 	const targetDateTime = new Date(targetDate).getTime();
