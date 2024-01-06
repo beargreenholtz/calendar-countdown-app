@@ -75,7 +75,7 @@ function AddEventModal(props: Props) {
 				props.onPressToggleModal();
 			}}
 		>
-			<KeyboardAvoidingView behavior="padding" style={styles.centeredView}>
+			<KeyboardAvoidingView behavior="height" style={styles.centeredView}>
 				<View style={styles.modalView}>
 					<View style={styles.progressBar}>
 						<Progress.Bar color="#BDCDE3" progress={(progressPart / 10) * 3.333} width={270} />
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
+		height: 'auto',
 	},
 	modalText: {
 		marginBottom: 16,
