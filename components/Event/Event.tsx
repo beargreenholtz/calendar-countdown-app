@@ -8,6 +8,7 @@ import * as Animatable from 'react-native-animatable';
 import { type EventData } from '../../types/event';
 import { type RouteParams } from '../../types/routes';
 import { dateFormat } from '../../utils/date-format';
+import { calculateDaysPassed } from '../../utils/days-caculator';
 import ProgressElement from '../ui/ProgressElement';
 
 function Event() {
@@ -55,7 +56,10 @@ function Event() {
 					</Animatable.View>
 					<Animatable.View animation="fadeInUp" delay={400} style={styles.element}>
 						<Fontisto name="date" size={24} color="#BDCDE3" />
-						<Text style={styles.targetDate}>{dateFormat(event.date)}</Text>
+						<View>
+							<Text style={styles.targetDate}>Event date: {dateFormat(event.date)}</Text>
+							<Text>Days past: {calculateDaysPassed(event.createdDate.toString())}</Text>
+						</View>
 					</Animatable.View>
 					<Animatable.View delay={600} animation="fadeInUp">
 						<Text>{event.description}</Text>

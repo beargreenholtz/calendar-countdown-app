@@ -6,6 +6,14 @@ export const calculateDaysPassed = (createdDate: string) => {
 	return daysPassed;
 };
 
+export const calculateDaysRemaining = (targetDate: string) => {
+	const oneDay = 24 * 60 * 60 * 1000;
+	const targetDateTime = new Date(targetDate).getTime();
+	const currentDateTime = new Date().getTime();
+	const daysPassed = Math.round(Math.abs((targetDateTime - currentDateTime) / oneDay + 1));
+	return daysPassed;
+};
+
 export const calculateDaysPassedToTarget = (createdDate: string, targetDate: string) => {
 	const oneDay = 24 * 60 * 60 * 1000;
 	const createdDateTime = new Date(createdDate).getTime();

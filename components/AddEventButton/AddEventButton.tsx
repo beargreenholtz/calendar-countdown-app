@@ -1,6 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import React from 'react';
-import { View, Pressable, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { ThemedButton } from 'react-native-really-awesome-button';
 
 type Props = {
 	readonly onPressToggleModal: () => void;
@@ -14,9 +15,9 @@ function AddEventButton(props: Props) {
 
 	return (
 		<View style={[styles.container]}>
-			<Pressable style={styles.button} onPress={handlePress}>
-				<Text style={styles.text}>+</Text>
-			</Pressable>
+			<ThemedButton backgroundColor="#F8BD8E" textColor="#000" width={80} height={80} borderRadius={26} name="bruce" type="primary" onPress={handlePress}>
+				+
+			</ThemedButton>
 		</View>
 	);
 }
@@ -26,21 +27,6 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		bottom: 20,
 		right: 20,
-	},
-	button: {
-		borderRadius: 90,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderWidth: 3,
-		backgroundColor: '#F8BD8E',
-		width: 80,
-		height: 80,
-	},
-	text: {
-		fontSize: 16,
-		lineHeight: 21,
-		fontWeight: 'bold',
-		letterSpacing: 0.25,
 	},
 });
 

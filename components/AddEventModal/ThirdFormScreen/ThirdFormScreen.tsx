@@ -17,7 +17,7 @@ function ThirdFormScreen(props: Props) {
 	return (
 		<>
 			<Pressable style={[styles.button, styles.showDateButton]} onPress={() => props.toggleDateVisibility()}>
-				<Text style={styles.textStyle}>Show Date</Text>
+				<Text style={styles.textStyle}>Pick a date</Text>
 			</Pressable>
 			{props.isVisible && (
 				<RNDateTimePicker

@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated, Alert } from 'react-native';
+import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated, Alert, Platform } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 import { type EventData } from '../../types/event';
 import { dateFormat } from '../../utils/date-format';
@@ -69,6 +70,11 @@ function EventList() {
 	return (
 		<>
 			<SafeAreaView style={styles.container}>
+				{events.length === 0 && (
+					<Animatable.View style={styles.noEventsInfoContainer} animation="fadeInUp">
+						<Text style={styles.noEventsTitle}>No events...</Text>
+					</Animatable.View>
+				)}
 				<AddEventModal onAddNewEvent={onAddNewEvent} onPressToggleModal={onPressToggleModal} isToggledModal={isToggledModal} />
 				<Animated.FlatList
 					data={events}
@@ -87,20 +93,32 @@ function EventList() {
 							outputRange: [1, 1, 1, 0],
 						});
 
-						console.log(dateFormat(event.item.date));
 						return (
-							<Animated.View style={{ transform: [{ scale }], opacity }}>
-								<Pressable onPress={() => onPressEvent(event.item.id)} onLongPress={() => onLongPressRemoveItem(event.item.id)}>
-									<View style={styles.eventContainer}>
-										<View>
-											<Text style={styles.title}>{event.item.name}</Text>
-											<Text style={styles.targetDate}>{dateFormat(event.item.date)}</Text>
-											<Text>{event.item.location}</Text>
+							<>
+								<Animated.View
+									style={[{ transform: [{ scale }], opacity }, { marginTop: Platform.OS === 'android' && event.index === 0 ? 12 : 0 }]}
+								>
+									<Pressable onPress={() => onPressEvent(event.item.id)} onLongPress={() => onLongPressRemoveItem(event.item.id)}>
+										<View style={styles.eventContainer}>
+											<View>
+												<Text style={styles.title}>{event.item.name}</Text>
+												<Text style={styles.targetDate}>{dateFormat(event.item.date)}</Text>
+												<Text>{event.item.location}</Text>
+											</View>
+											<ProgressElement
+												createdDate={dateFormat(event.item.createdDate)}
+												targetDate={dateFormat(event.item.date)}
+												isSmall
+											/>
 										</View>
-										<ProgressElement createdDate={dateFormat(event.item.createdDate)} targetDate={dateFormat(event.item.date)} isSmall />
-									</View>
-								</Pressable>
-							</Animated.View>
+									</Pressable>
+								</Animated.View>
+								{event.index === events.length - 1 && (
+									<Animatable.View style={styles.deleteInfo} animation="fadeInUp">
+										<Text>Long press on event to delete</Text>
+									</Animatable.View>
+								)}
+							</>
 						);
 					}}
 					keyExtractor={(item) => item.id}
@@ -139,6 +157,20 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.22,
 		shadowRadius: 2.22,
+	},
+	deleteInfo: {
+		alignSelf: 'center',
+		marginBottom: 12,
+	},
+	noEventsInfoContainer: {
+		position: 'absolute',
+		height: '100%',
+		justifyContent: 'center',
+		alignSelf: 'center',
+	},
+	noEventsTitle: {
+		fontSize: 18,
+		fontWeight: 'bold',
 	},
 });
 

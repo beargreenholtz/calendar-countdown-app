@@ -22,13 +22,16 @@ function FirstFormScreen(props: Props) {
 
 		const { status } = await Location.requestForegroundPermissionsAsync();
 		if (status !== 'granted') {
+			setIsLoadingLocation(false);
+
 			return;
 		}
 
-		const location = await Location.getCurrentPositionAsync({});
+		const location = await Location.getCurrentPositionAsync({ accuracy: 1 });
+
 		const address = await Location.reverseGeocodeAsync(location.coords);
 
-		props.onChangeInput('location', address[0].name ? address[0].name : '');
+		props.onChangeInput('location', address[0].street && address[0].streetNumber ? address[0].street + ' ' + address[0].streetNumber : '');
 
 		setIsLoadingLocation(false);
 	};
@@ -40,6 +43,7 @@ function FirstFormScreen(props: Props) {
 				placeholderTextColor="#BDCDE3"
 				onChangeText={(e) => props.onChangeInput('name', e)}
 				style={styles.inputName}
+				maxLength={16}
 			/>
 			<View style={styles.locationContainer}>
 				{!isLoadingLocation ? (
@@ -55,6 +59,7 @@ function FirstFormScreen(props: Props) {
 					placeholderTextColor="#BDCDE3"
 					onChangeText={(e) => props.onChangeInput('location', e)}
 					style={styles.inputLocation}
+					maxLength={25}
 				/>
 			</View>
 			<View style={styles.buttons}>
