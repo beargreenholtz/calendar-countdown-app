@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Notifications from 'expo-notifications';
@@ -24,18 +25,20 @@ export default function App() {
 	return (
 		<>
 			<StatusBar />
-			<SafeAreaView style={styles.container}>
-				<NavigationContainer>
-					<Stack.Navigator
-						screenOptions={{
-							headerShown: false,
-						}}
-					>
-						<Stack.Screen name="Home" component={Home} />
-						<Stack.Screen name="Event" component={Event} />
-					</Stack.Navigator>
-				</NavigationContainer>
-			</SafeAreaView>
+			<ActionSheetProvider>
+				<SafeAreaView style={styles.container}>
+					<NavigationContainer>
+						<Stack.Navigator
+							screenOptions={{
+								headerShown: false,
+							}}
+						>
+							<Stack.Screen name="Home" component={Home} />
+							<Stack.Screen name="Event" component={Event} />
+						</Stack.Navigator>
+					</NavigationContainer>
+				</SafeAreaView>
+			</ActionSheetProvider>
 		</>
 	);
 }

@@ -1,4 +1,5 @@
-import { FontAwesome } from '@expo/vector-icons';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
@@ -17,6 +18,10 @@ import ProgressElement from '../ui/ProgressElement';
 
 function EventList() {
 	const navigation = useNavigation();
+	const { showActionSheetWithOptions } = useActionSheet();
+
+	const [longPressedEventId, setLongPressedEventId] = useState('');
+
 	const scrollY = useRef(new Animated.Value(0)).current;
 	const [isToggledModal, setIsToggledModal] = useState(false);
 
@@ -53,14 +58,34 @@ function EventList() {
 	};
 
 	const onLongPressRemoveItem = async (id: string) => {
-		// try {
-		// 	Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-		// 	await Notifications.dismissNotificationAsync(id);
-		// 	await AsyncStorage.removeItem(id);
-		// 	setEvents((prev) => prev.filter((event) => event.id !== id));
-		// } catch (error) {
-		// 	if (error instanceof Error) Alert.alert(error.message);
-		// }
+		setLongPressedEventId(id);
+		const options = ['Delete', 'Cancel'];
+		const destructiveButtonIndex = 0;
+		const cancelButtonIndex = 1;
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+
+		showActionSheetWithOptions(
+			{
+				options,
+				cancelButtonIndex,
+				destructiveButtonIndex,
+			},
+			async (selectedIndex: number | undefined) => {
+				if (selectedIndex === destructiveButtonIndex) {
+					try {
+						await Notifications.dismissNotificationAsync(id);
+						await AsyncStorage.removeItem(id);
+						setEvents((prev) => prev.filter((event) => event.id !== id));
+						setLongPressedEventId('');
+					} catch (error) {
+						if (error instanceof Error) Alert.alert(error.message);
+						setLongPressedEventId('');
+					}
+				} else {
+					setLongPressedEventId('');
+				}
+			},
+		);
 	};
 
 	useEffect(() => {
@@ -123,10 +148,13 @@ function EventList() {
 									style={[{ transform: [{ scale }], opacity }, { marginTop: Platform.OS === 'android' && event.index === 0 ? 12 : 0 }]}
 								>
 									<Pressable onPress={() => onPressEvent(event.item.id)} onLongPress={() => onLongPressRemoveItem(event.item.id)}>
-										<View style={styles.eventContainer}>
+										<View style={[styles.eventContainer, longPressedEventId === event.item.id && styles.selectedContainer]}>
 											<View>
 												<Text style={styles.title}>{event.item.name}</Text>
-												<Text style={styles.targetDate}>{new Date(event.item.date).toLocaleDateString().toString()}</Text>
+												<View style={styles.targetDateContainer}>
+													<MaterialCommunityIcons name="book" size={18} color="black" />
+													<Text style={styles.targetDate}>{new Date(event.item.date).toLocaleDateString().toString()}</Text>
+												</View>
 												<Pressable onPress={() => onPressLocation(event.item.location)} style={styles.locationContainer}>
 													{event.item.location && <FontAwesome name="location-arrow" size={18} color="#BDCDE3" />}
 													<Text>{event.item.location}</Text>
@@ -177,6 +205,11 @@ const styles = StyleSheet.create({
 		gap: 4,
 		alignItems: 'center',
 	},
+	targetDateContainer: {
+		flexDirection: 'row',
+		gap: 4,
+		alignItems: 'center',
+	},
 	eventContainer: {
 		flexDirection: 'row',
 		height: 100,
@@ -214,6 +247,9 @@ const styles = StyleSheet.create({
 		textDecorationLine: 'underline',
 		marginTop: 24,
 		paddingHorizontal: 24,
+	},
+	selectedContainer: {
+		backgroundColor: '#FFCCCC',
 	},
 });
 

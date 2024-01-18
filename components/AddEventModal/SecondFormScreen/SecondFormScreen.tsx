@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Text, Pressable, TextInput } from 'react-native';
 
-import { type Event } from '../../../types/event';
+import { type EventData } from '../../../types/event';
 
 type Props = {
-	readonly data: Event;
+	readonly data: EventData;
 	readonly onChangeInput: (name: string, value: string) => void;
 	readonly onPressChangePart: (direction: string) => void;
 };
@@ -12,15 +12,18 @@ type Props = {
 function SecondFormScreen(props: Props) {
 	return (
 		<>
-			<TextInput
-				placeholder="Description"
-				value={props.data.description}
-				placeholderTextColor="#BDCDE3"
-				onChangeText={(e) => props.onChangeInput('description', e)}
-				style={styles.inputDescription}
-				numberOfLines={4}
-				multiline
-			/>
+			<View>
+				<Text>Description</Text>
+				<TextInput
+					placeholder="Set up the playlist"
+					value={props.data.description}
+					placeholderTextColor="#BDCDE3"
+					onChangeText={(e) => props.onChangeInput('description', e)}
+					style={styles.inputDescription}
+					numberOfLines={4}
+					multiline
+				/>
+			</View>
 			<View style={styles.buttons}>
 				<Pressable style={[styles.button, styles.buttonClose]} onPress={() => props.onPressChangePart('prev')}>
 					<Text style={styles.textStyle}>Back</Text>
@@ -47,7 +50,7 @@ const styles = StyleSheet.create({
 		gap: 12,
 	},
 	buttonNext: {
-		backgroundColor: '#7EA39F',
+		backgroundColor: '#7597C5',
 	},
 
 	button: {
@@ -59,7 +62,6 @@ const styles = StyleSheet.create({
 	},
 	textStyle: {
 		color: 'black',
-		fontWeight: 'bold',
 		textAlign: 'center',
 	},
 });

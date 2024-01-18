@@ -16,6 +16,7 @@ type Props = {
 function ThirdFormScreen(props: Props) {
 	return (
 		<>
+			<Text>Pick the event date.</Text>
 			{Platform.OS === 'android' && (
 				<Pressable style={[styles.button, styles.showDateButton]} onPress={() => props.toggleDateVisibility()}>
 					<Text style={styles.textStyle}>Pick a date</Text>
@@ -28,9 +29,9 @@ function ThirdFormScreen(props: Props) {
 					value={props.data.date}
 					accentColor="#7EA39F"
 					onChange={(_, date) => (date ? props.onChangeInput('date', date) : new Date())}
+					style={{ marginBottom: 20 }}
 				/>
 			)}
-			<Text>Pick the event date.</Text>
 			<View style={styles.buttons}>
 				<Pressable style={[styles.button, styles.buttonClose]} onPress={() => props.onPressChangePart('prev')}>
 					<Text style={styles.textStyle}>Back</Text>
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
 		gap: 12,
 	},
 	buttonNext: {
-		backgroundColor: '#7EA39F',
+		backgroundColor: '#7597C5',
 	},
 	button: {
 		borderRadius: 6,
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
 	},
 	textStyle: {
 		color: 'black',
-		fontWeight: 'bold',
 		textAlign: 'center',
 	},
 	showDateButton: {

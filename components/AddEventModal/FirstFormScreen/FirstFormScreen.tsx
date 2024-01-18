@@ -37,30 +37,36 @@ function FirstFormScreen(props: Props) {
 	};
 	return (
 		<>
-			<TextInput
-				placeholder="Event name"
-				value={props.data.name ? props.data.name : ''}
-				placeholderTextColor="#BDCDE3"
-				onChangeText={(e) => props.onChangeInput('name', e)}
-				style={styles.inputName}
-				maxLength={16}
-			/>
-			<View style={styles.locationContainer}>
-				{!isLoadingLocation ? (
-					<Pressable onPress={onGetLocation}>
-						<FontAwesome name="location-arrow" size={24} color="#BDCDE3" />
-					</Pressable>
-				) : (
-					<ActivityIndicator />
-				)}
+			<View>
+				<Text>Event name</Text>
 				<TextInput
-					placeholder="Location"
-					value={props.data.location}
+					placeholder="Party in ibiza"
+					value={props.data.name ? props.data.name : ''}
 					placeholderTextColor="#BDCDE3"
-					onChangeText={(e) => props.onChangeInput('location', e)}
-					style={styles.inputLocation}
-					maxLength={25}
+					onChangeText={(e) => props.onChangeInput('name', e)}
+					style={styles.inputName}
+					maxLength={16}
 				/>
+			</View>
+			<View>
+				<Text>Location</Text>
+				<View style={styles.locationContainer}>
+					<TextInput
+						placeholder="Ibiza"
+						value={props.data.location}
+						placeholderTextColor="#BDCDE3"
+						onChangeText={(e) => props.onChangeInput('location', e)}
+						style={styles.inputLocation}
+						maxLength={25}
+					/>
+					{!isLoadingLocation ? (
+						<Pressable onPress={onGetLocation}>
+							<FontAwesome name="location-arrow" size={24} color="#BDCDE3" />
+						</Pressable>
+					) : (
+						<ActivityIndicator />
+					)}
+				</View>
 			</View>
 			<View style={styles.buttons}>
 				<Pressable style={[styles.button, styles.buttonClose]} onPress={props.onPressToggleModal}>
@@ -92,7 +98,7 @@ const styles = StyleSheet.create({
 		gap: 12,
 	},
 	buttonNext: {
-		backgroundColor: '#7EA39F',
+		backgroundColor: '#7597C5',
 	},
 	button: {
 		borderRadius: 6,
@@ -103,7 +109,6 @@ const styles = StyleSheet.create({
 	},
 	textStyle: {
 		color: 'black',
-		fontWeight: 'bold',
 		textAlign: 'center',
 	},
 });

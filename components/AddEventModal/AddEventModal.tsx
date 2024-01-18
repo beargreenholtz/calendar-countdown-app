@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import * as Notifications from 'expo-notifications';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, View, Modal, StyleSheet, Alert, Platform } from 'react-native';
+import { KeyboardAvoidingView, View, Modal, StyleSheet, Alert, Platform, Text } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { type EventData } from 'types/event';
 
@@ -100,6 +100,11 @@ function AddEventModal(props: Props) {
 			<KeyboardAvoidingView behavior="height" style={styles.centeredView}>
 				<View style={styles.modalView}>
 					<View style={styles.progressBar}>
+						<View style={styles.progressBarPartIndicator}>
+							<Text>1</Text>
+							<Text>2</Text>
+							<Text>3</Text>
+						</View>
 						<Progress.Bar color="#BDCDE3" progress={(progressPart / 10) * 3.333} width={270} />
 					</View>
 
@@ -139,8 +144,8 @@ const styles = StyleSheet.create({
 		margin: 20,
 		backgroundColor: 'white',
 		borderRadius: 20,
-		padding: 35,
 		alignItems: 'center',
+		justifyContent: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
@@ -149,7 +154,8 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
-		height: 'auto',
+		height: '100%',
+		width: '100%',
 	},
 	modalText: {
 		marginBottom: 16,
@@ -157,6 +163,10 @@ const styles = StyleSheet.create({
 	},
 	progressBar: {
 		marginBottom: 24,
+	},
+	progressBarPartIndicator: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
 	},
 });
 
