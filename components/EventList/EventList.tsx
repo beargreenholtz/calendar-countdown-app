@@ -1,12 +1,16 @@
+import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
+import * as Notifications from 'expo-notifications';
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated, Alert, Platform } from 'react-native';
+import { View, StyleSheet, Text, Pressable, SafeAreaView, Animated, Alert, Platform, Linking } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
+import Header from './Header';
 import { type EventData } from '../../types/event';
 import { dateFormat } from '../../utils/date-format';
+import { getFontSize } from '../../utils/get-device-fontsize';
 import AddEventButton from '../AddEventButton/AddEventButton';
 import AddEventModal from '../AddEventModal/AddEventModal';
 import ProgressElement from '../ui/ProgressElement';
@@ -22,7 +26,7 @@ function EventList() {
 
 	const [events, setEvents] = useState<EventData[]>([]);
 
-	const onPressEvent = (id: string) => {
+	const onPressEvent = async (id: string) => {
 		navigation.navigate('Event', { eventId: id });
 	};
 
@@ -32,16 +36,31 @@ function EventList() {
 		}
 	};
 
-	const onLongPressRemoveItem = async (id: string) => {
+	const onPressLocation = async (location: string) => {
+		if (!location) return;
+
+		const destination = encodeURIComponent(`${location}`);
+		const provider = Platform.OS === 'ios' ? 'apple' : 'google';
+		const link = `http://maps.${provider}.com/?daddr=${destination}`;
+
 		try {
-			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+			const supported = await Linking.canOpenURL(link);
 
-			await AsyncStorage.removeItem(id);
-
-			setEvents((prev) => prev.filter((event) => event.id !== id));
+			if (supported) Linking.openURL(link);
 		} catch (error) {
-			if (error instanceof Error) Alert.alert(error.message);
+			console.log(error);
 		}
+	};
+
+	const onLongPressRemoveItem = async (id: string) => {
+		// try {
+		// 	Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+		// 	await Notifications.dismissNotificationAsync(id);
+		// 	await AsyncStorage.removeItem(id);
+		// 	setEvents((prev) => prev.filter((event) => event.id !== id));
+		// } catch (error) {
+		// 	if (error instanceof Error) Alert.alert(error.message);
+		// }
 	};
 
 	useEffect(() => {
@@ -67,6 +86,7 @@ function EventList() {
 			}
 		})();
 	}, []);
+
 	return (
 		<>
 			<SafeAreaView style={styles.container}>
@@ -76,7 +96,11 @@ function EventList() {
 					</Animatable.View>
 				)}
 				<AddEventModal onAddNewEvent={onAddNewEvent} onPressToggleModal={onPressToggleModal} isToggledModal={isToggledModal} />
+
+				<Header />
 				<Animated.FlatList
+					scrollEventThrottle={5}
+					showsVerticalScrollIndicator={false}
 					data={events}
 					onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
 					renderItem={(event) => {
@@ -102,8 +126,11 @@ function EventList() {
 										<View style={styles.eventContainer}>
 											<View>
 												<Text style={styles.title}>{event.item.name}</Text>
-												<Text style={styles.targetDate}>{dateFormat(event.item.date)}</Text>
-												<Text>{event.item.location}</Text>
+												<Text style={styles.targetDate}>{new Date(event.item.date).toLocaleDateString().toString()}</Text>
+												<Pressable onPress={() => onPressLocation(event.item.location)} style={styles.locationContainer}>
+													{event.item.location && <FontAwesome name="location-arrow" size={18} color="#BDCDE3" />}
+													<Text>{event.item.location}</Text>
+												</Pressable>
 											</View>
 											<ProgressElement
 												createdDate={dateFormat(event.item.createdDate)}
@@ -113,6 +140,7 @@ function EventList() {
 										</View>
 									</Pressable>
 								</Animated.View>
+
 								{event.index === events.length - 1 && (
 									<Animatable.View style={styles.deleteInfo} animation="fadeInUp">
 										<Text>Long press on event to delete</Text>
@@ -124,21 +152,30 @@ function EventList() {
 					keyExtractor={(item) => item.id}
 				/>
 			</SafeAreaView>
+
 			<AddEventButton onPressToggleModal={onPressToggleModal} />
 		</>
 	);
 }
 
 const styles = StyleSheet.create({
+	header: {
+		flex: 1,
+	},
 	container: {
 		flex: 1,
 	},
 	title: {
-		fontSize: 26,
+		fontSize: getFontSize(20),
 		fontWeight: 'bold',
 	},
 	targetDate: {
-		fontSize: 16,
+		fontSize: getFontSize(16),
+	},
+	locationContainer: {
+		flexDirection: 'row',
+		gap: 4,
+		alignItems: 'center',
 	},
 	eventContainer: {
 		flexDirection: 'row',
@@ -169,8 +206,14 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	noEventsTitle: {
-		fontSize: 18,
+		fontSize: getFontSize(18),
 		fontWeight: 'bold',
+	},
+	pageTitle: {
+		fontSize: getFontSize(16),
+		textDecorationLine: 'underline',
+		marginTop: 24,
+		paddingHorizontal: 24,
 	},
 });
 

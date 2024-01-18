@@ -1,44 +1,51 @@
 {
-  "expo": {
-    "name": "calender-countdown",
-    "slug": "calender-countdown",
-    "version": "1.1.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.bargreenholtz.calendercountdown"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.bargreenholtz.eventtrackerpro",
-      "versionCode": 3
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "91f566dc-9208-4df3-967d-9dd4ec77dac6"
-      }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/91f566dc-9208-4df3-967d-9dd4ec77dac6"
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    }
-  }
+	"expo": {
+		"name": "calender-countdown",
+		"slug": "calender-countdown",
+		"version": "1.1.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.bargreenholtz.calendercountdown"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.bargreenholtz.eventtrackerpro",
+			"versionCode": 3
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "91f566dc-9208-4df3-967d-9dd4ec77dac6"
+			}
+		},
+		"updates": {
+			"url": "https://u.expo.dev/91f566dc-9208-4df3-967d-9dd4ec77dac6"
+		},
+		"runtimeVersion": {
+			"policy": "appVersion"
+		},
+		"plugins": [
+			[
+				"expo-notifications",
+				{
+					"icon": "./local/assets/icon.png",
+					"color": "#ffffff"
+				}
+			]
+		]
+	}
 }

@@ -1,6 +1,6 @@
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import React from 'react';
-import { View, StyleSheet, Text, Pressable } from 'react-native';
+import { View, StyleSheet, Text, Pressable, Platform } from 'react-native';
 
 import { type EventData } from '../../../types/event';
 
@@ -16,9 +16,11 @@ type Props = {
 function ThirdFormScreen(props: Props) {
 	return (
 		<>
-			<Pressable style={[styles.button, styles.showDateButton]} onPress={() => props.toggleDateVisibility()}>
-				<Text style={styles.textStyle}>Pick a date</Text>
-			</Pressable>
+			{Platform.OS === 'android' && (
+				<Pressable style={[styles.button, styles.showDateButton]} onPress={() => props.toggleDateVisibility()}>
+					<Text style={styles.textStyle}>Pick a date</Text>
+				</Pressable>
+			)}
 			{props.isVisible && (
 				<RNDateTimePicker
 					minimumDate={new Date()}

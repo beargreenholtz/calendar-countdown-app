@@ -1,12 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
+import * as Notifications from 'expo-notifications';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, View, Modal, StyleSheet, Alert } from 'react-native';
+import { KeyboardAvoidingView, View, Modal, StyleSheet, Alert, Platform } from 'react-native';
 import * as Progress from 'react-native-progress';
+import { type EventData } from 'types/event';
 
 import FirstFormScreen from './FirstFormScreen/FirstFormScreen';
 import SecondFormScreen from './SecondFormScreen/SecondFormScreen';
 import ThirdFormScreen from './ThirdFormScreen/ThirdFormScreen';
+import { getUserPermission } from '../../utils/notification-permission';
 
 type Props = {
 	readonly onAddNewEvent: any;
@@ -32,7 +35,7 @@ function AddEventModal(props: Props) {
 	};
 
 	const onChangeInput = (inputName: string, value: string | Date) => {
-		setIsVisible((prev) => !prev);
+		if (Platform.OS === 'android') setIsVisible((prev) => !prev);
 		setEventData((prev) => {
 			return {
 				...prev,
@@ -47,6 +50,24 @@ function AddEventModal(props: Props) {
 		});
 	};
 
+	const createNotification = (eventData: EventData) => {
+		const isValid = getUserPermission();
+
+		if (!isValid) return;
+
+		Notifications.scheduleNotificationAsync({
+			content: {
+				title: `Your event ${eventData.name} is happening today`,
+				body: `The place of the event is ${eventData.location}`,
+			},
+			trigger: {
+				seconds: 10,
+				// date: eventData.date.setSeconds(eventData.date.getSeconds() + 40),
+			},
+			identifier: eventData.id,
+		});
+	};
+
 	const onPressSubmitEvent = async () => {
 		try {
 			if (eventData) {
@@ -54,6 +75,7 @@ function AddEventModal(props: Props) {
 				await AsyncStorage.setItem(eventData.id, eventDataString);
 
 				props.onAddNewEvent(eventData);
+				createNotification(eventData);
 			} else {
 				Alert.alert('Invalid event data', 'Please check the event details');
 			}

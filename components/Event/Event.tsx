@@ -9,6 +9,7 @@ import { type EventData } from '../../types/event';
 import { type RouteParams } from '../../types/routes';
 import { dateFormat } from '../../utils/date-format';
 import { calculateDaysPassed } from '../../utils/days-caculator';
+import { getFontSize } from '../../utils/get-device-fontsize';
 import ProgressElement from '../ui/ProgressElement';
 
 function Event() {
@@ -41,12 +42,12 @@ function Event() {
 	return event ? (
 		<View>
 			<View style={styles.upperContainer}>
-				<Animatable.Text animation="fadeInUp" style={styles.title}>
-					{event.name}
-				</Animatable.Text>
-				<View style={styles.progressCircle}>
-					<ProgressElement createdDate={dateFormat(event.createdDate)} targetDate={dateFormat(event.date)} isSmall={false} />
+				<View style={styles.titleWrapper}>
+					<Animatable.Text animation="fadeInUp" style={styles.title}>
+						{event.name}
+					</Animatable.Text>
 				</View>
+				<ProgressElement createdDate={dateFormat(event.createdDate)} targetDate={dateFormat(event.date)} isSmall={false} />
 			</View>
 			<View style={styles.lowerContainer}>
 				<View>
@@ -73,16 +74,21 @@ function Event() {
 }
 
 const styles = StyleSheet.create({
+	titleWrapper: {
+		flexShrink: 1,
+	},
 	title: {
-		position: 'absolute',
-		top: 110,
-		left: 24,
-		fontSize: 26,
+		fontSize: getFontSize(24),
 		fontWeight: 'bold',
+		overflow: 'scroll',
 	},
 	upperContainer: {
+		paddingHorizontal: 20,
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		flexDirection: 'row',
 		backgroundColor: '#BDCDE3',
-		height: 250,
+		height: '25%',
 	},
 	loader: {
 		justifyContent: 'center',
@@ -96,10 +102,10 @@ const styles = StyleSheet.create({
 		marginBottom: 12,
 	},
 	location: {
-		fontSize: 16,
+		fontSize: getFontSize(16),
 	},
 	targetDate: {
-		fontSize: 16,
+		fontSize: getFontSize(16),
 	},
 	lowerContainer: {
 		top: -12,
@@ -108,11 +114,6 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		padding: 20,
 		height: '100%',
-	},
-	progressCircle: {
-		position: 'absolute',
-		bottom: 30,
-		right: 30,
 	},
 });
 
